@@ -1,16 +1,18 @@
 import React from "react";
-import inactiveUser from "../../../Images/lethargic.png";
-import activeUser from "../../../Images/active-user.png";
+import Tooltip from "../Tooltip";
 
 export default function Profile({
   name,
   email,
   phoneNumber,
-  handleRemoveUser,
   index,
   source,
-  moveToInactiveUsers,
-  moveToActiveUsers,
+  primaryButtonAction,
+  secondaryButtonAction,
+  primaryActionImage,
+  secondaryActionImage,
+  primaryHoverText,
+  secondaryHoverText,
 }) {
   return (
     <div style={{ display: "flex" }}>
@@ -28,15 +30,46 @@ export default function Profile({
           {phoneNumber}
         </div>
       </div>
-      <h2
-        title="move to removed users"
+
+      <Tooltip text={primaryHoverText}>
+        <img
+          style={{ height: "25px", width: "25px", cursor: "pointer" }}
+          src={primaryActionImage}
+          onClick={() => {
+            primaryButtonAction(source, index);
+          }}
+        />
+      </Tooltip>
+      <Tooltip text={secondaryHoverText}>
+        <img
+          style={{ height: "25px", width: "25px", cursor: "pointer" }}
+          src={secondaryActionImage}
+          onClick={() => {
+            secondaryButtonAction(source, index);
+          }}
+        />
+      </Tooltip>
+
+      {/* <img  
         onClick={() => {
           handleRemoveUser(index, source);
         }}
         style={{ cursor: "pointer" }}
-      >
-        &#x2716;
-      </h2>
+      
+        {source == "active" ? (
+          " X"
+        ) :                                                                                                               (
+          <img
+            title="move to inactive users"
+            onClick={() => {
+              moveToInactiveUsers(source, index);
+            }}
+            style={{ height: "25px", cursor: "pointer" }}
+            src={inactiveUser}
+            alt="inactive"
+          />
+        )}
+      
       {source == "active" ? (
         <img
           title="move to inactive users"
@@ -57,7 +90,7 @@ export default function Profile({
           src={activeUser}
           alt="inactive"
         />
-      )}
+      )} */}
     </div>
   );
 }

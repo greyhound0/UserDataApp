@@ -4,10 +4,13 @@ import Profile from "../../UIElements/Profile";
 export default function UserProfiles({
   heading,
   arrayData = [],
-  handleRemoveUser,
+  primaryButtonAction,
+  secondaryButtonAction,
+  primaryActionImage,
+  secondaryActionImage,
+  primaryHoverText,
+  secondaryHoverText,
   source,
-  moveToInactiveUsers,
-  moveToActiveUsers,
 }) {
   return (
     <div>
@@ -20,9 +23,16 @@ export default function UserProfiles({
           key={i}
           index={i}
           source={source}
-          handleRemoveUser={handleRemoveUser}
-          moveToInactiveUsers={moveToInactiveUsers}
-          moveToActiveUsers={moveToActiveUsers}
+          primaryButtonAction={primaryButtonAction}
+          secondaryButtonAction={secondaryButtonAction}
+          primaryActionImage={primaryActionImage}
+          secondaryActionImage={secondaryActionImage}
+          primaryHoverText={primaryHoverText}
+          secondaryHoverText={secondaryHoverText}
+
+          // handleRemoveUser={handleRemoveUser}
+          // moveToInactiveUsers={moveToInactiveUsers}
+          // moveToActiveUsers={moveToActiveUsers}
         />
       ))}
     </div>

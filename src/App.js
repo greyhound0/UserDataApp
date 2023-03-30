@@ -3,7 +3,7 @@ import UserForm from "./components/Modules/UserForm";
 
 function App() {
   return (
-    <div className="usersDisplay">
+    <div className="App">
       <UserForm />
     </div>
   );

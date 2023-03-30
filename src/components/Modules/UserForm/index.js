@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import Form from "../../UIElements/Form";
 import { emailRegex, mobileRegex } from "../../utils/constants";
 import UserProfiles from "../UserProfiles";
-import staticArrayData from "./data";
+import inactiveUserImage from "../../../Images/lethargic.png";
+import activeUserImage from "../../../Images/active-user.png";
+import removedUserImage from "../../../Images/cross.png";
 
 function UserForm() {
   const [name, setName] = useState("");
@@ -12,38 +14,9 @@ function UserForm() {
   const [isNameValid, setIsNameValid] = useState(true);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPhoneNoValid, setIsPhoneNoValid] = useState(true);
-  const [activeUsers, setactiveUsers] = useState(staticArrayData);
+  const [activeUsers, setactiveUsers] = useState([]);
   const [removedUsers, setremovedUsers] = useState([]);
   const [inactiveUsers, setInactiveUsers] = useState([]);
-
-  const inputFields = [
-    {
-      type: "text",
-      value: name,
-      onChange: setName,
-      placeholder: "Eg. Manas Gupta",
-      label: "Name *",
-      errorMessage: !isNameValid
-        ? "Should have more than 3 characters"
-        : undefined,
-    },
-    {
-      type: "email",
-      value: email,
-      onChange: setEmail,
-      placeholder: "Eg. greyhound@gmail.com",
-      label: "Email *",
-      errorMessage: !isEmailValid ? "Enter Valid Email" : undefined,
-    },
-    {
-      type: "number",
-      value: phoneNumber,
-      onChange: setPhoneNumber,
-      placeholder: "Eg. 8126196827",
-      label: "Phone Number *",
-      errorMessage: !isPhoneNoValid ? "Enter Valid Phone No." : undefined,
-    },
-  ];
 
   const handleClick = () => {
     if (
@@ -57,13 +30,13 @@ function UserForm() {
       let tempArray = [...activeUsers];
       tempArray.push({ name, email, phoneNumber });
       setactiveUsers(tempArray);
-      //   setName("");
-      //   setEmail("");
-      //   setPhoneNumber("");
+      setName("");
+      setEmail("");
+      setPhoneNumber("");
     }
   };
 
-  const handleRemoveUser = (i, source) => {
+  const handleRemoveUser = (source, i) => {
     //origianl array operations
     if (source == "active") {
       let tempArray = [...activeUsers];
@@ -82,17 +55,6 @@ function UserForm() {
       tempRemovedUserArray.push(removedUser[0]);
       setremovedUsers(tempRemovedUserArray);
     }
-  };
-
-  const reverseRemovedUsers = (i) => {
-    //removed array operations
-    let tempRemovedUserArray = [...removedUsers];
-    let transientUser = tempRemovedUserArray.splice(i, 1);
-    setremovedUsers(tempRemovedUserArray);
-    //original array operations
-    let tempArray = [...activeUsers];
-    tempArray.push(transientUser[0]);
-    setactiveUsers(tempArray);
   };
 
   const moveToInactiveUsers = (source, i) => {
@@ -149,6 +111,80 @@ function UserForm() {
     console.log(activeUsers);
   }, [activeUsers]);
 
+  useEffect(() => {
+    return () => {
+      alert("local storage set");
+      localStorage.setItem("activeUsers", JSON.stringify(activeUsers));
+      localStorage.setItem("removedUsers", JSON.stringify(removedUsers));
+      localStorage.setItem("inctaiveUsers", JSON.stringify(inactiveUsers));
+    };
+  }, []);
+
+  const inputFields = [
+    {
+      type: "text",
+      value: name,
+      onChange: setName,
+      placeholder: "Eg. Manas Gupta",
+      label: "Name *",
+      errorMessage: !isNameValid
+        ? "Should have more than 3 characters"
+        : undefined,
+    },
+    {
+      type: "email",
+      value: email,
+      onChange: setEmail,
+      placeholder: "Eg. greyhound@gmail.com",
+      label: "Email *",
+      errorMessage: !isEmailValid ? "Enter Valid Email" : undefined,
+    },
+    {
+      type: "number",
+      value: phoneNumber,
+      onChange: setPhoneNumber,
+      placeholder: "Eg. 8126196827",
+      label: "Phone Number *",
+      errorMessage: !isPhoneNoValid ? "Enter Valid Phone No." : undefined,
+    },
+  ];
+
+  const userProfile = [
+    {
+      heading: "Active",
+      primaryButtonAction: moveToInactiveUsers,
+      secondaryButtonAction: handleRemoveUser,
+      primaryActionImage: inactiveUserImage,
+      secondaryActionImage: removedUserImage,
+      primaryHoverText: "Move To Inactive User",
+      secondaryHoverText: "Remove User",
+      arrayData: activeUsers,
+      source: "active",
+    },
+    {
+      heading: "Removed",
+      primaryButtonAction: moveToInactiveUsers,
+      secondaryButtonAction: moveToActiveUsers,
+      primaryActionImage: inactiveUserImage,
+      secondaryActionImage: activeUserImage,
+      primaryHoverText: "Move To Inactive User",
+      secondaryHoverText: "Move To Active User",
+      arrayData: removedUsers,
+      source: "removed",
+    },
+    {
+      heading: "Inactive",
+      primaryButtonAction: moveToActiveUsers,
+      secondaryButtonAction: handleRemoveUser,
+      primaryActionImage: activeUserImage,
+      secondaryActionImage: removedUserImage,
+      primaryHoverText: "Move To Active User",
+      secondaryHoverText: "Remove User",
+      arrayData: inactiveUsers,
+      source: "inactive",
+    },
+  ];
+
   //   REMOVE ITEMS FROM ACTIVE LIST - DONE
   // ADD REMOVED ITEMS TO INACTIVE LIST
 
@@ -160,30 +196,20 @@ function UserForm() {
       <Form inputFields={inputFields} submitOnClick={handleClick} />
       <div style={{ display: "flex", justifyContent: "space-evenly" }}>
         <div>
-          <UserProfiles
-            heading={"Active Users"}
-            handleRemoveUser={handleRemoveUser}
-            moveToInactiveUsers={moveToInactiveUsers}
-            arrayData={activeUsers}
-            source={"active"}
-          />
-          <hr />
-          <UserProfiles
-            heading={"Removed Users"}
-            handleRemoveUser={reverseRemovedUsers}
-            moveToInactiveUsers={moveToInactiveUsers}
-            moveToActiveUsers={moveToActiveUsers}
-            arrayData={removedUsers}
-            source={"removed"}
-          />
+          {userProfile.map((data, i) => (
+            <UserProfiles
+              heading={data.heading}
+              primaryButtonAction={data.primaryButtonAction}
+              secondaryButtonAction={data.secondaryButtonAction}
+              primaryActionImage={data.primaryActionImage}
+              secondaryActionImage={data.secondaryActionImage}
+              primaryHoverText={data.primaryHoverText}
+              secondaryHoverText={data.secondaryHoverText}
+              arrayData={data.arrayData}
+              source={data.source}
+            />
+          ))}
         </div>
-        <UserProfiles
-          heading={"Inactive Users"}
-          source={"inactive"}
-          arrayData={inactiveUsers}
-          handleRemoveUser={handleRemoveUser}
-          moveToActiveUsers={moveToActiveUsers}
-        />
       </div>
     </div>
   );
