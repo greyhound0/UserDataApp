@@ -1,5 +1,7 @@
 import React from "react";
+import ImageProcessing from "../Image processing";
 import Input from "../Input";
+import "./style.css";
 
 export default function Form({
   inputFields = [],
@@ -7,7 +9,7 @@ export default function Form({
   submitOnClick = () => {},
 }) {
   return (
-    <form>
+    <form className="form">
       {inputFields.map((field, i) => (
         <Input
           label={field.label}
@@ -19,16 +21,8 @@ export default function Form({
           key={i}
         />
       ))}
-      <div
-        style={{
-          border: "1px solid #e5e5e5",
-          padding: "6px 16px",
-          borderRadius: "2px",
-          width: "fit-content",
-          cursor: "pointer",
-        }}
-        onClick={submitOnClick}
-      >
+
+      <div className="submitButton" onClick={submitOnClick}>
         {submitButtonText}
       </div>
     </form>

@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Form from "../../UIElements/Form";
 import { emailRegex, mobileRegex } from "../../utils/constants";
+import "./style.css";
 import UserProfiles from "../UserProfiles";
 import inactiveUserImage from "../../../Images/lethargic.png";
 import activeUserImage from "../../../Images/active-user.png";
 import removedUserImage from "../../../Images/cross.png";
+import { getLocalStoragItem, setLocalStorage } from "../../utils/localstorage";
 
 function UserForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [image, setImage] = useState(null);
+  const [userProfile, setUserProfile] = useState([]);
 
   const [isNameValid, setIsNameValid] = useState(true);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPhoneNoValid, setIsPhoneNoValid] = useState(true);
-  const [activeUsers, setactiveUsers] = useState([]);
-  const [removedUsers, setremovedUsers] = useState([]);
-  const [inactiveUsers, setInactiveUsers] = useState([]);
+  const [isImageValid, setIsImageValid] = useState(true);
+  const [activeUsers, setactiveUsers] = useState(
+    getLocalStoragItem("activeUsers")
+  );
+  const [removedUsers, setremovedUsers] = useState(
+    getLocalStoragItem("removedUsers")
+  );
+  const [inactiveUsers, setInactiveUsers] = useState(
+    getLocalStoragItem("inactiveUsers")
+  );
 
   const handleClick = () => {
     if (
@@ -28,11 +40,18 @@ function UserForm() {
       phoneNumber
     ) {
       let tempArray = [...activeUsers];
-      tempArray.push({ name, email, phoneNumber });
+      tempArray.push({
+        name,
+        email,
+        phoneNumber,
+        image,
+        id: activeUsers?.length,
+      });
       setactiveUsers(tempArray);
       setName("");
       setEmail("");
       setPhoneNumber("");
+      setImage(null);
     }
   };
 
@@ -90,6 +109,27 @@ function UserForm() {
     setactiveUsers(tempArray);
   };
 
+  const handleImageChange = (x) => {
+    console.log(x, "file");
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+
+    reader.readAsDataURL(x);
+  };
+
+  const clearData = () => {
+    setLocalStorage(activeUsers, []);
+    setLocalStorage(inactiveUsers, []);
+    setLocalStorage(removedUsers, []);
+
+    setactiveUsers([]);
+    setremovedUsers([]);
+    setInactiveUsers([]);
+  };
+
   useEffect(() => {
     if (name.length > 2) setIsNameValid(true);
     else setIsNameValid(false);
@@ -108,17 +148,32 @@ function UserForm() {
   }, [phoneNumber]);
 
   useEffect(() => {
+    if (image) {
+      setIsImageValid(true);
+    } else {
+      setIsImageValid(false);
+    }
+  }, [image]);
+
+  useEffect(() => {
     console.log(activeUsers);
   }, [activeUsers]);
 
   useEffect(() => {
-    return () => {
-      alert("local storage set");
-      localStorage.setItem("activeUsers", JSON.stringify(activeUsers));
-      localStorage.setItem("removedUsers", JSON.stringify(removedUsers));
-      localStorage.setItem("inctaiveUsers", JSON.stringify(inactiveUsers));
-    };
-  }, []);
+    setLocalStorage("activeUsers", activeUsers);
+
+    return () => {};
+  }, [activeUsers]);
+
+  useEffect(() => {
+    setLocalStorage("removedUsers", removedUsers);
+    return () => {};
+  }, [removedUsers]);
+
+  useEffect(() => {
+    setLocalStorage("inactiveUsers", inactiveUsers);
+    return () => {};
+  }, [inactiveUsers]);
 
   const inputFields = [
     {
@@ -126,7 +181,7 @@ function UserForm() {
       value: name,
       onChange: setName,
       placeholder: "Eg. Manas Gupta",
-      label: "Name *",
+      label: "Name * ",
       errorMessage: !isNameValid
         ? "Should have more than 3 characters"
         : undefined,
@@ -136,7 +191,7 @@ function UserForm() {
       value: email,
       onChange: setEmail,
       placeholder: "Eg. greyhound@gmail.com",
-      label: "Email *",
+      label: "Email * ",
       errorMessage: !isEmailValid ? "Enter Valid Email" : undefined,
     },
     {
@@ -144,73 +199,155 @@ function UserForm() {
       value: phoneNumber,
       onChange: setPhoneNumber,
       placeholder: "Eg. 8126196827",
-      label: "Phone Number *",
+      label: "Phone * ",
       errorMessage: !isPhoneNoValid ? "Enter Valid Phone No." : undefined,
     },
-  ];
 
-  const userProfile = [
     {
-      heading: "Active",
-      primaryButtonAction: moveToInactiveUsers,
-      secondaryButtonAction: handleRemoveUser,
-      primaryActionImage: inactiveUserImage,
-      secondaryActionImage: removedUserImage,
-      primaryHoverText: "Move To Inactive User",
-      secondaryHoverText: "Remove User",
-      arrayData: activeUsers,
-      source: "active",
-    },
-    {
-      heading: "Removed",
-      primaryButtonAction: moveToInactiveUsers,
-      secondaryButtonAction: moveToActiveUsers,
-      primaryActionImage: inactiveUserImage,
-      secondaryActionImage: activeUserImage,
-      primaryHoverText: "Move To Inactive User",
-      secondaryHoverText: "Move To Active User",
-      arrayData: removedUsers,
-      source: "removed",
-    },
-    {
-      heading: "Inactive",
-      primaryButtonAction: moveToActiveUsers,
-      secondaryButtonAction: handleRemoveUser,
-      primaryActionImage: activeUserImage,
-      secondaryActionImage: removedUserImage,
-      primaryHoverText: "Move To Active User",
-      secondaryHoverText: "Remove User",
-      arrayData: inactiveUsers,
-      source: "inactive",
+      type: "file",
+      value: null,
+      onChange: handleImageChange,
+      placeholder: "Tap to Upload",
+      label: "Upload Image",
     },
   ];
 
+  useEffect(() => {
+    setUserProfile([
+      {
+        heading: "Active",
+        primaryButtonAction: moveToInactiveUsers,
+        secondaryButtonAction: handleRemoveUser,
+        primaryActionImage: inactiveUserImage,
+        secondaryActionImage: removedUserImage,
+        primaryHoverText: "Move To Inactive User",
+        secondaryHoverText: "Remove User",
+        arrayData: activeUsers,
+        source: "active",
+      },
+      {
+        heading: "Inactive",
+        primaryButtonAction: moveToActiveUsers,
+        secondaryButtonAction: handleRemoveUser,
+        primaryActionImage: activeUserImage,
+        secondaryActionImage: removedUserImage,
+        primaryHoverText: "Move To Active User",
+        secondaryHoverText: "Remove User",
+        arrayData: inactiveUsers,
+        source: "inactive",
+      },
+      {
+        heading: "Removed",
+        primaryButtonAction: moveToInactiveUsers,
+        secondaryButtonAction: moveToActiveUsers,
+        primaryActionImage: inactiveUserImage,
+        secondaryActionImage: activeUserImage,
+        primaryHoverText: "Move To Inactive User",
+        secondaryHoverText: "Move To Active User",
+        arrayData: removedUsers,
+        source: "removed",
+      },
+    ]);
+  }, [activeUsers, removedUsers, inactiveUsers]);
   //   REMOVE ITEMS FROM ACTIVE LIST - DONE
   // ADD REMOVED ITEMS TO INACTIVE LIST
 
   //   3: Add Search Option based on Names in that list
   //   BONUS: add search support for all 3 keys in 1 search field
 
+  // let card;
+  // let setUser;
+  // if (source === "active") {
+  //   card = activeUsers;
+  //   setUser = setactiveUsers;
+  // } else if (source === "removed") {
+  //   card = removedUsers;
+  //   setUser = setremovedUsers;
+  // } else if (source === "inactive") {
+  //   card = inactiveUsers;
+  //   setUser = setInactiveUsers;
+  // }
+
+  const reorder = (list, startIndex, endIndex) => {
+    let result = [...list];
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      console.log("hahahaha");
+      return;
+    }
+
+    const items = reorder(
+      userProfile,
+      result.source.index,
+      result.destination.index
+    );
+
+    console.log("items", items);
+    setUserProfile(items);
+  };
+
   return (
     <div>
-      <Form inputFields={inputFields} submitOnClick={handleClick} />
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-        <div>
-          {userProfile.map((data, i) => (
-            <UserProfiles
-              heading={data.heading}
-              primaryButtonAction={data.primaryButtonAction}
-              secondaryButtonAction={data.secondaryButtonAction}
-              primaryActionImage={data.primaryActionImage}
-              secondaryActionImage={data.secondaryActionImage}
-              primaryHoverText={data.primaryHoverText}
-              secondaryHoverText={data.secondaryHoverText}
-              arrayData={data.arrayData}
-              source={data.source}
-            />
-          ))}
-        </div>
+      <div>
+        <Form inputFields={inputFields} submitOnClick={handleClick} />
+        <button className="clearDataButton" onClick={clearData}>
+          Clear Data
+        </button>
       </div>
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="userProfile">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{ display: "flex", justifyContent: "space-evenly" }}
+            >
+              <div className="userProfile">
+                {userProfile.map((data, i) => (
+                  <Draggable
+                    key={data?.heading}
+                    draggableId={data?.heading}
+                    index={i}
+                  >
+                    {(provided) => (
+                      <div
+                        {...provided?.draggableProps}
+                        {...provided?.dragHandleProps}
+                        ref={provided?.innerRef}
+                      >
+                        <UserProfiles
+                          activeUsers={activeUsers}
+                          setactiveUsers={setactiveUsers}
+                          removedUsers={removedUsers}
+                          setremovedUsers={setremovedUsers}
+                          inactiveUsers={inactiveUsers}
+                          setInactiveUsers={setInactiveUsers}
+                          heading={data.heading}
+                          primaryButtonAction={data.primaryButtonAction}
+                          secondaryButtonAction={data.secondaryButtonAction}
+                          primaryActionImage={data.primaryActionImage}
+                          secondaryActionImage={data.secondaryActionImage}
+                          primaryHoverText={data.primaryHoverText}
+                          secondaryHoverText={data.secondaryHoverText}
+                          arrayData={data.arrayData}
+                          source={data.source}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+              </div>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }
