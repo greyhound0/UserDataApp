@@ -8,6 +8,7 @@ import inactiveUserImage from "../../../Images/lethargic.png";
 import activeUserImage from "../../../Images/active-user.png";
 import removedUserImage from "../../../Images/cross.png";
 import { getLocalStoragItem, setLocalStorage } from "../../utils/localstorage";
+import { getObjectIndex } from "../../utils/getObjectIndex";
 
 function UserForm() {
   const [name, setName] = useState("");
@@ -110,7 +111,6 @@ function UserForm() {
   };
 
   const handleImageChange = (x) => {
-    console.log(x, "file");
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -154,10 +154,6 @@ function UserForm() {
       setIsImageValid(false);
     }
   }, [image]);
-
-  useEffect(() => {
-    console.log(activeUsers);
-  }, [activeUsers]);
 
   useEffect(() => {
     setLocalStorage("activeUsers", activeUsers);
@@ -223,6 +219,7 @@ function UserForm() {
         primaryHoverText: "Move To Inactive User",
         secondaryHoverText: "Remove User",
         arrayData: activeUsers,
+        setArraydata: setactiveUsers,
         source: "active",
       },
       {
@@ -230,10 +227,10 @@ function UserForm() {
         primaryButtonAction: moveToActiveUsers,
         secondaryButtonAction: handleRemoveUser,
         primaryActionImage: activeUserImage,
-        secondaryActionImage: removedUserImage,
         primaryHoverText: "Move To Active User",
         secondaryHoverText: "Remove User",
         arrayData: inactiveUsers,
+        setArraydata: setInactiveUsers,
         source: "inactive",
       },
       {
@@ -244,52 +241,49 @@ function UserForm() {
         secondaryActionImage: activeUserImage,
         primaryHoverText: "Move To Inactive User",
         secondaryHoverText: "Move To Active User",
+        secondaryActionImage: removedUserImage,
         arrayData: removedUsers,
+        setArraydata: setremovedUsers,
         source: "removed",
       },
     ]);
   }, [activeUsers, removedUsers, inactiveUsers]);
-  //   REMOVE ITEMS FROM ACTIVE LIST - DONE
-  // ADD REMOVED ITEMS TO INACTIVE LIST
-
-  //   3: Add Search Option based on Names in that list
-  //   BONUS: add search support for all 3 keys in 1 search field
-
-  // let card;
-  // let setUser;
-  // if (source === "active") {
-  //   card = activeUsers;
-  //   setUser = setactiveUsers;
-  // } else if (source === "removed") {
-  //   card = removedUsers;
-  //   setUser = setremovedUsers;
-  // } else if (source === "inactive") {
-  //   card = inactiveUsers;
-  //   setUser = setInactiveUsers;
-  // }
-
-  const reorder = (list, startIndex, endIndex) => {
-    let result = [...list];
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-  };
 
   const onDragEnd = (result) => {
-    if (!result.destination) {
-      console.log("hahahaha");
+    if (
+      !result.destination ||
+      (result.source.droppableId == result.destination.droppableId &&
+        result.source.index == result.destination.index)
+    ) {
       return;
     }
 
-    const items = reorder(
+    const sourceIndexOfProfile = getObjectIndex(
       userProfile,
-      result.source.index,
-      result.destination.index
+      result?.source?.droppableId
+    );
+    const destinationIndexOfProfile = getObjectIndex(
+      userProfile,
+      result.destination.droppableId
     );
 
-    console.log("items", items);
-    setUserProfile(items);
+    let sourceTempArray = [...userProfile[sourceIndexOfProfile].arrayData];
+    const [removedProfile] = sourceTempArray.splice(result?.source?.index, 1);
+    let destinationTempArray = [
+      ...userProfile[destinationIndexOfProfile].arrayData,
+    ];
+
+    if (result?.source?.droppableId !== result.destination.droppableId) {
+      destinationTempArray.splice(
+        result?.destination?.index,
+        0,
+        removedProfile
+      );
+      userProfile[destinationIndexOfProfile].setArraydata(destinationTempArray);
+    } else {
+      sourceTempArray.splice(result?.destination?.index, 0, removedProfile);
+    }
+    userProfile[sourceIndexOfProfile].setArraydata(sourceTempArray);
   };
 
   return (
@@ -302,51 +296,28 @@ function UserForm() {
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="userProfile">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{ display: "flex", justifyContent: "space-evenly" }}
-            >
-              <div className="userProfile">
-                {userProfile.map((data, i) => (
-                  <Draggable
-                    key={data?.heading}
-                    draggableId={data?.heading}
-                    index={i}
-                  >
-                    {(provided) => (
-                      <div
-                        {...provided?.draggableProps}
-                        {...provided?.dragHandleProps}
-                        ref={provided?.innerRef}
-                      >
-                        <UserProfiles
-                          activeUsers={activeUsers}
-                          setactiveUsers={setactiveUsers}
-                          removedUsers={removedUsers}
-                          setremovedUsers={setremovedUsers}
-                          inactiveUsers={inactiveUsers}
-                          setInactiveUsers={setInactiveUsers}
-                          heading={data.heading}
-                          primaryButtonAction={data.primaryButtonAction}
-                          secondaryButtonAction={data.secondaryButtonAction}
-                          primaryActionImage={data.primaryActionImage}
-                          secondaryActionImage={data.secondaryActionImage}
-                          primaryHoverText={data.primaryHoverText}
-                          secondaryHoverText={data.secondaryHoverText}
-                          arrayData={data.arrayData}
-                          source={data.source}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-              </div>
-            </div>
-          )}
-        </Droppable>
+        <div className="userProfile">
+          {userProfile.map((data, i) => (
+            <UserProfiles
+              key={i}
+              activeUsers={activeUsers}
+              setactiveUsers={setactiveUsers}
+              removedUsers={removedUsers}
+              setremovedUsers={setremovedUsers}
+              inactiveUsers={inactiveUsers}
+              setInactiveUsers={setInactiveUsers}
+              heading={data.heading}
+              primaryButtonAction={data.primaryButtonAction}
+              secondaryButtonAction={data.secondaryButtonAction}
+              primaryActionImage={data.primaryActionImage}
+              secondaryActionImage={data.secondaryActionImage}
+              primaryHoverText={data.primaryHoverText}
+              secondaryHoverText={data.secondaryHoverText}
+              arrayData={data.arrayData}
+              source={data.source}
+            />
+          ))}
+        </div>
       </DragDropContext>
     </div>
   );

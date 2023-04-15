@@ -54,29 +54,37 @@ export default function Profile({
           {" " + phoneNumber}
         </div>
       </div>
-
-      <Tooltip text={primaryHoverText}>
-        <div style={{ width: "70px", paddingLeft: "33px" }}>
-          <img
-            style={{ height: "25px", width: "25px", cursor: "pointer" }}
-            src={primaryActionImage}
-            onClick={() => {
-              primaryButtonAction(source, index);
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}
+      >
+        <Tooltip text={primaryHoverText}>
+          <div style={{ width: "70px", paddingLeft: "33px" }}>
+            <img
+              style={{ height: "25px", width: "25px", cursor: "pointer" }}
+              src={primaryActionImage}
+              onClick={() => {
+                primaryButtonAction(source, index);
+              }}
+            />
+          </div>
+        </Tooltip>
+        <Tooltip text={secondaryHoverText}>
+          <div
+            style={{
+              width: "70px",
+              paddingLeft: "33px",
             }}
-          />
-        </div>
-      </Tooltip>
-      <Tooltip text={secondaryHoverText}>
-        <div style={{ width: "70px", paddingLeft: "33px" }}>
-          <img
-            style={{ height: "25px", width: "25px", cursor: "pointer" }}
-            src={secondaryActionImage}
-            onClick={() => {
-              secondaryButtonAction(source, index);
-            }}
-          />
-        </div>
-      </Tooltip>
+          >
+            <img
+              style={{ height: "25px", width: "25px", cursor: "pointer" }}
+              src={secondaryActionImage}
+              onClick={() => {
+                secondaryButtonAction(source, index);
+              }}
+            />
+          </div>
+        </Tooltip>
+      </div>
 
       {/* <img  
         onClick={() => {

@@ -12,8 +12,8 @@
   border-radius: 7px;
   padding: 5px 1px;
   position: absolute;
-  z-index: 1;
-  margin: 25px;
+  z-index: +2;
+  /* margin: 25px; */
   animation: fadeIn 0.7s ease-in-out;
 }
 

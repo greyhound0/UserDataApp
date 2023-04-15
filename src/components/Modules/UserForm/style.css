@@ -26,7 +26,8 @@
 .clearDataButton {
   background-color: #fc2947;
   border-radius: 20px;
-  border: 1px solid var(--blue);
+  margin-left: 90%;
+  border: 1px solid #e9e9e9;
   color: var(--white);
   cursor: pointer;
   font-size: 0.6rem;
@@ -39,5 +40,5 @@
 }
 
 .clearDataButton:active {
-  transform: scale(0.95);
+  transform: scale(0.9);
 }
