@@ -16,9 +16,23 @@ export default function Profile({
   primaryHoverText,
   secondaryHoverText,
 }) {
-  let firstName = name?.split("")[0]?.toUpperCase();
+  let initial = name?.split("")[0]?.toUpperCase();
+  let initial2;
+  for (let i = 1; i < name.length; i++) {
+    if (name.split("")[i] === " ") {
+      initial2 = name.split("")[i + 1];
+    }
+  }
+  let goodColors = [
+    "#ffc681",
+    "#5effd6",
+    "#c6e442",
+    "#f8b3ed",
+    "#e2e2e2",
+    "#9793fb",
+  ];
   const [randomColor, setRandomColor] = useState(
-    "#" + Math.floor(Math.random() * 16777215).toString(16)
+    goodColors[Math.floor(Math.random() * 6)]
   );
 
   return (
@@ -35,10 +49,11 @@ export default function Profile({
               borderRadius: "20px",
               textAlign: "center",
               padding: "5px",
+              color: "#0f254c",
               fontWeight: "bold",
             }}
           >
-            {firstName}
+            {initial + initial2}
           </div>
         )}
         <div>

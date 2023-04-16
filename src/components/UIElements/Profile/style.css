@@ -1,11 +1,11 @@
 .label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
 }
 
 .image {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 30px;
   border: 5px solid black;
 }
@@ -16,7 +16,7 @@
   border-radius: 10px;
   margin: 10px;
   width: 300px;
-  color: rgb(85, 121, 145);
+  color: #0f254c;
   font-size: 16px;
   gap: 2px;
   position: relative;

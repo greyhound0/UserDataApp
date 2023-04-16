@@ -22,7 +22,7 @@ export default function Input({
         placeholder={placeholder}
       />
 
-      {errorMessage ? (
+      {errorMessage && value != "" ? (
         <p
           style={{
             color: "rgb(217,17,0)",

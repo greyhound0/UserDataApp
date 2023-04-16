@@ -37,7 +37,7 @@ export default function UserProfiles({
         backgroundColor: cardBackgroundColor(source),
       }}
     >
-      <h2>{heading}</h2>
+      <h1 className="heading">{heading}</h1>
       <Droppable droppableId={source}>
         {(provided) => (
           <div

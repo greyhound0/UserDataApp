@@ -3,7 +3,7 @@
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.3);
   width: 25vw;
-  margin-left: 36vw;
+  margin-left: 37vw;
   font-size: 10px;
   border-radius: 10px;
   padding: 10px;
@@ -37,7 +37,7 @@
     var(--blue) 0%,
     var(--lightblue) 74%
   );
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px solid var(--blue);
   color: var(--white);
   cursor: pointer;
