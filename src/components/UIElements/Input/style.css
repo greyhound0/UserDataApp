@@ -1,4 +1,12 @@
 .input {
   border-radius: 5px;
   height: 25px;
+  margin: 2px;
+}
+
+.inputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
 }

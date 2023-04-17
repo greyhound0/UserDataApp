@@ -9,6 +9,7 @@ export default function Profile({
   index,
   source,
   image,
+  color,
   primaryButtonAction,
   secondaryButtonAction,
   primaryActionImage,
@@ -17,23 +18,26 @@ export default function Profile({
   secondaryHoverText,
 }) {
   let initial = name?.split("")[0]?.toUpperCase();
-  let initial2;
-  for (let i = 1; i < name.length; i++) {
+  let initial2 = "";
+  for (let i = 1; i < name.length + 1; i++) {
     if (name.split("")[i] === " ") {
-      initial2 = name.split("")[i + 1];
+      name.split("")[i + 1]
+        ? (initial2 = name.split("")[i + 1])
+        : (initial2 = "");
+      console.log(initial2);
     }
   }
-  let goodColors = [
-    "#ffc681",
-    "#5effd6",
-    "#c6e442",
-    "#f8b3ed",
-    "#e2e2e2",
-    "#9793fb",
-  ];
-  const [randomColor, setRandomColor] = useState(
-    goodColors[Math.floor(Math.random() * 6)]
-  );
+  // let goodColors = [
+  //   "#ffc681",
+  //   "#5effd6",
+  //   "#c6e442",
+  //   "#f8b3ed",
+  //   "#e2e2e2",
+  //   "#9793fb",
+  // ];
+  // const [randomColor, setRandomColor] = useState(
+  //   goodColors[Math.floor(Math.random() * 6)]
+  // );
 
   return (
     <div className="profile" draggable>
@@ -43,7 +47,7 @@ export default function Profile({
         ) : (
           <div
             style={{
-              backgroundColor: randomColor,
+              backgroundColor: color,
               width: "25px",
               height: "25px",
               borderRadius: "20px",

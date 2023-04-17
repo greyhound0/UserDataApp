@@ -10,7 +10,7 @@ export default function Input({
   errorMessage = "",
 }) {
   return (
-    <div style={{ marginBottom: "8px" }}>
+    <div className="inputContainer" style={{ marginBottom: "8px" }}>
       <label className="label">{label}</label>
       <input
         className="input"

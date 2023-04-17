@@ -12,6 +12,7 @@ export default function UserProfiles({
   secondaryActionImage,
   primaryHoverText,
   secondaryHoverText,
+  // color = { color },
   source,
 }) {
   const cardBackgroundColor = (source) => {
@@ -63,6 +64,7 @@ export default function UserProfiles({
                       email={user?.email}
                       phoneNumber={user?.phoneNumber}
                       image={user?.image}
+                      color={user?.color}
                       key={i}
                       index={i}
                       source={source}

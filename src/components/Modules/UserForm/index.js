@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Form from "../../UIElements/Form";
-import { emailRegex, mobileRegex } from "../../utils/constants";
+import { emailRegex, mobileRegex, randomColor } from "../../utils/constants";
 import "./style.css";
 import UserProfiles from "../UserProfiles";
 import inactiveUserImage from "../../../Images/lethargic.png";
@@ -9,6 +9,7 @@ import activeUserImage from "../../../Images/active-user.png";
 import removedUserImage from "../../../Images/cross.png";
 import { getLocalStoragItem, setLocalStorage } from "../../utils/localstorage";
 import { getObjectIndex } from "../../utils/getObjectIndex";
+import staticArrayData from "./data";
 
 function UserForm() {
   const [name, setName] = useState("");
@@ -31,6 +32,8 @@ function UserForm() {
     getLocalStoragItem("inactiveUsers")
   );
 
+  // const [color, setColor] = useState(goodColors[Math.floor(Math.random() * 6)]);
+
   const handleClick = () => {
     if (
       isNameValid &&
@@ -46,6 +49,7 @@ function UserForm() {
         email,
         phoneNumber,
         image,
+        color: randomColor(),
         id: activeUsers?.length,
       });
       setactiveUsers(tempArray);
@@ -211,7 +215,7 @@ function UserForm() {
   useEffect(() => {
     setUserProfile([
       {
-        heading: "Active",
+        heading: "Active Users",
         primaryButtonAction: moveToInactiveUsers,
         secondaryButtonAction: handleRemoveUser,
         primaryActionImage: inactiveUserImage,
@@ -223,7 +227,7 @@ function UserForm() {
         source: "active",
       },
       {
-        heading: "Inactive",
+        heading: "Inactive Users",
         primaryButtonAction: moveToActiveUsers,
         secondaryButtonAction: handleRemoveUser,
         primaryActionImage: activeUserImage,
@@ -235,7 +239,7 @@ function UserForm() {
         source: "inactive",
       },
       {
-        heading: "Removed",
+        heading: "Removed Users",
         primaryButtonAction: moveToActiveUsers,
         secondaryButtonAction: moveToInactiveUsers,
         primaryActionImage: activeUserImage,
@@ -285,13 +289,21 @@ function UserForm() {
     }
     userProfile[sourceIndexOfProfile].setArraydata(sourceTempArray);
   };
+  console.log(activeUsers);
 
   return (
     <div>
-      <div>
+      <div className="upperFields">
+        <button
+          className="populateUsers"
+          onClick={() => setactiveUsers(staticArrayData)}
+        >
+          Populate Users
+        </button>
+
         <Form inputFields={inputFields} submitOnClick={handleClick} />
-        <button className="clearDataButton" onClick={clearData}>
-          Clear Data
+        <button className="clearUsersButton" onClick={clearData}>
+          Clear Users
         </button>
       </div>
 
@@ -315,6 +327,7 @@ function UserForm() {
               secondaryHoverText={data.secondaryHoverText}
               arrayData={data.arrayData}
               source={data.source}
+              // color={color}
             />
           ))}
         </div>

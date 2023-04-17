@@ -23,10 +23,9 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.clearDataButton {
+.clearUsersButton {
   background-color: #fc2947;
   border-radius: 10px;
-  margin-left: 90%;
   border: 1px solid #e9e9e9;
   color: var(--white);
   cursor: pointer;
@@ -34,11 +33,37 @@
   font-weight: bold;
   letter-spacing: 0.1rem;
   height: 30px;
+  margin-top: 250px;
   padding: 0.9rem rem;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
 }
 
-.clearDataButton:active {
+.populateUsers:active {
   transform: scale(0.9);
+}
+
+.clearUsersButton:active {
+  transform: scale(0.9);
+}
+
+.populateUsers {
+  background-color: #00699a;
+  border-radius: 10px;
+  border: 1px solid #e9e9e9;
+  color: var(--white);
+  cursor: pointer;
+  font-size: 0.6rem;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  height: 30px;
+  margin-top: 250px;
+  padding: 0.9rem rem;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+.upperFields {
+  display: flex;
+  justify-content: space-evenly;
 }
