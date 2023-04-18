@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import Form from "../../UIElements/Form";
 import { emailRegex, mobileRegex, randomColor } from "../../utils/constants";
 import "./style.css";
@@ -62,7 +62,7 @@ function UserForm() {
 
   const handleRemoveUser = (source, i) => {
     //origianl array operations
-    if (source == "active") {
+    if (source === "active") {
       let tempArray = [...activeUsers];
       let removedUser = tempArray.splice(i, 1);
       setactiveUsers(tempArray);
@@ -70,7 +70,7 @@ function UserForm() {
       let tempRemovedUserArray = [...removedUsers];
       tempRemovedUserArray.push(removedUser[0]);
       setremovedUsers(tempRemovedUserArray);
-    } else if (source == "inactive") {
+    } else if (source === "inactive") {
       let tempArray = [...inactiveUsers];
       let removedUser = tempArray.splice(i, 1);
       setInactiveUsers(tempArray);
@@ -84,11 +84,11 @@ function UserForm() {
   const moveToInactiveUsers = (source, i) => {
     let tempArray = [...inactiveUsers];
     let newInactiveUser;
-    if (source == "active") {
+    if (source === "active") {
       let tempActiveUsers = [...activeUsers];
       newInactiveUser = tempActiveUsers.splice(i, 1);
       setactiveUsers(tempActiveUsers);
-    } else if (source == "removed") {
+    } else if (source === "removed") {
       let tempRemovedUsers = [...removedUsers];
       newInactiveUser = tempRemovedUsers.splice(i, 1);
       setremovedUsers(tempRemovedUsers);
@@ -101,11 +101,11 @@ function UserForm() {
   const moveToActiveUsers = (source, i) => {
     let tempArray = [...activeUsers];
     let newActiveUser;
-    if (source == "inactive") {
+    if (source === "inactive") {
       let tempInactiveUsers = [...inactiveUsers];
       newActiveUser = tempInactiveUsers.splice(i, 1);
       setInactiveUsers(tempInactiveUsers);
-    } else if (source == "removed") {
+    } else if (source === "removed") {
       let tempRemovedUsers = [...removedUsers];
       newActiveUser = tempRemovedUsers.splice(i, 1);
       setremovedUsers(tempRemovedUsers);
@@ -256,8 +256,8 @@ function UserForm() {
   const onDragEnd = (result) => {
     if (
       !result.destination ||
-      (result.source.droppableId == result.destination.droppableId &&
-        result.source.index == result.destination.index)
+      (result.source.droppableId === result.destination.droppableId &&
+        result.source.index === result.destination.index)
     ) {
       return;
     }
