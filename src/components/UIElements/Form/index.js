@@ -1,5 +1,4 @@
 import React from "react";
-import ImageProcessing from "../Image processing";
 import Input from "../Input";
 import "./style.css";
 

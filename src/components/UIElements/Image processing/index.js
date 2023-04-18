@@ -18,7 +18,7 @@ const ImageProcessing = () => {
     <div>
       <form>
         <input type="file" accept="image/*" onChange={handleImageChange} />
-        {image && <img src={image} alt="uploaded image" />}
+        {image && <img src={image} />}
       </form>
     </div>
   );

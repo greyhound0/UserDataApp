@@ -24,7 +24,7 @@ export default function UserProfiles({
       case "inactive":
         bgColor = "rgb(252,185,0)";
         break;
-      case "active":
+      default:
         bgColor = "rgb(19,235,106)";
         break;
     }

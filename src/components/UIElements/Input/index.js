@@ -18,15 +18,15 @@ export default function Input({
           type={type}
           value={value}
           onChange={(e) =>
-            onChange(type == "file" ? e.target.files[0] : e.target.value)
+            onChange(type === "file" ? e.target.files[0] : e.target.value)
           }
           placeholder={placeholder}
           style={{
-            backgroundColor: type == "file" ? "#505050" : undefined,
+            backgroundColor: type === "file" ? "#505050" : undefined,
           }}
         />
 
-        {errorMessage && value != "" ? (
+        {errorMessage && value !== "" ? (
           <p
             style={{
               color: "rgb(217,17,0)",
