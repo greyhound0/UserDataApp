@@ -10,7 +10,7 @@
   align-items: center;
 
   border: 2px solid white;
-  box-shadow: 5px 20px 50px #888888;
+  box-shadow: 5px 20px 50px #3f3d3d;
   overflow-y: scroll;
 }
 
@@ -26,4 +26,7 @@
 .pro {
   display: flex;
   justify-content: center;
+}
+.heading {
+  text-shadow: 2px 2px 2px #ccc;
 }

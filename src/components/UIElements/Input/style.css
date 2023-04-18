@@ -10,3 +10,8 @@
   align-items: center;
   padding: 2px;
 }
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
