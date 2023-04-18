@@ -34,7 +34,7 @@ export default function Input({
               fontWeight: "bold",
               margin: "0",
               padding: "0",
-              fontWeight: "bold",
+              textShadow: "0.33px 0.33px 0.33px red",
             }}
           >
             {errorMessage}
